@@ -1,3 +1,6 @@
+let humanScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
     let choice = Math.floor(Math.random() * 3);
     switch(choice) {
@@ -9,35 +12,22 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let choice = prompt("your choice").toLowerCase();
-    if (choice == "rock" || choice == "paper" || choice == "scissors") {
-        return choice;
-    } else {
-        console.log("invalid input");
-    }
-}
+function playRound(humanChoice) {
 
-let humanScore = 0;
-let computerScore = 0;
-
-function playRound() {
-
-    let humanChoice = getHumanChoice();
     let computerChoice = getComputerChoice();
 
     switch (humanChoice) {
         case "rock":
             switch (computerChoice) {
                 case "rock":
-                    console.log("both chose rock thus no one wins.");
+                    addResult("both chose rock thus no one wins.");
                     break;
                 case "paper":
-                    console.log("computer wins with paper over rock.");
+                    addResult("computer wins with paper over rock.");
                     computerScore++;
                     break;
                 case "scissors":
-                    console.log("human wins with rock over scissors");
+                    addResult("human wins with rock over scissors");
                     humanScore++;
                     break;
             }
@@ -45,14 +35,14 @@ function playRound() {
         case "paper":
             switch (computerChoice) {
                 case "rock":
-                    console.log("human wins with paper over rock.");
+                    addResult("human wins with paper over rock.");
                     humanScore++;
                     break;
                 case "paper":
-                    console.log("both chose paper thus no one wins.");
+                    addResult("both chose paper thus no one wins.");
                     break;
                 case "scissors":
-                    console.log("computer wins with scissors over paper.");
+                    addResult("computer wins with scissors over paper.");
                     computerScore++;
                     break;
             }
@@ -60,25 +50,55 @@ function playRound() {
         case "scissors":
             switch (computerChoice) {
                 case "rock":
-                    console.log("computer wins with rock over scissors.");
+                    addResult("computer wins with rock over scissors.");
                     computerScore++;
                     break;
                 case "paper":
-                    console.log("human wins with scissors over paper.");
+                    addResult("human wins with scissors over paper.");
                     humanScore++;
                     break;
                 case "scissors":
-                    console.log("both chose scissors thus no one wins.");
+                    addResult("both chose scissors thus no one wins.");
                     break;
             }
     }
-    console.log(`Computer Score: ${computerScore} -- Human Score: ${humanScore}`);
+    score.textContent = `Computer Score: ${computerScore} -- Human Score: ${humanScore}`;
+    checkWinner();
 }
 
-function playGame(rounds) {
-    for (let i = 0; i < rounds; i++) {
-        playRound();
+const buttons = document.querySelectorAll("button");
+const results = document.querySelector(".results");
+let score = document.querySelector(".score");
+let end = document.querySelector(".end");
+
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.textContent);
+    })
+})
+
+function addResult(message) {
+    const newLine = document.createElement("br");
+    results.appendChild(newLine);
+    let messageNode = document.createTextNode(message);
+    results.appendChild(messageNode);
+}
+
+let requiredWins = 5;
+
+function checkWinner() {
+
+    if (humanScore == requiredWins) {
+        const newLine = document.createElement("br");
+        end.appendChild(newLine);
+        let messageNode = document.createTextNode("Human won!");
+        end.appendChild(messageNode);
+    }
+
+    if (computerScore == requiredWins) {
+        const newLine = document.createElement("br");
+        end.appendChild(newLine);
+        let messageNode = document.createTextNode("Coputer won!");
+        end.appendChild(messageNode);
     }
 }
-
-playGame(5);
